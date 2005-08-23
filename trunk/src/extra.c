@@ -2,11 +2,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#include <extra.h>
-
 #define ERR_LOCATION stderr
 
-void extra_warn(char *fmt, ...) {
+void libcontainer_warn(char *fmt, ...) {
   va_list args;
 
   /* initial tagging */

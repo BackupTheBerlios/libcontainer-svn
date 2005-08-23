@@ -1,6 +1,10 @@
 #ifndef __LIB_CONTAINER_837284789237489723894798237
 #define __LIB_CONTAINER_837284789237489723894798237
 
+/* general */
+
+void libcontainer_warn(char *fmt, ...);
+
 /* tree */
 
 #define TREE_NULL_NODE ((Tree_node *)0)
@@ -77,7 +81,6 @@ typedef struct __LIST_HEADER {
 
 List_header *list_init(void);
 void list_reverse(List_header *header);
-void list_randomise(List_header *header);
 
 void list_swap_nodes(List_node *node1, List_node *node2);
 void list_bubble_sort(List_header *header,
@@ -134,5 +137,18 @@ Stack_header *stack_init(void);
 List_node *stack_pop(Stack_header *header);
 List_node *stack_push(Stack_header *header, List_data *data);
 void stack_destroy(Stack_header *header, List_data_free_func free_func);
+
+/* hash table */
+
+typedef struct __HASHTABLE_NODE {
+  List_node *node;
+  unsigned long key;
+} Hashtable_node;
+
+#define Hashtable_header List_header;
+
+/* some hash functions to choose from */
+unsigned long hash_djb2(const unsigned char *str);
+unsigned long hash_sdbm(const unsigned char *str);
 
 #endif

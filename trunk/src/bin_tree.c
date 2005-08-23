@@ -4,7 +4,6 @@
 #include <assert.h>
 
 #include <libcontainer.h>
-#include "extra.h"
 
 #ifdef HAVE_CONFIG_H
   #include "config.h"
@@ -42,7 +41,7 @@ Tree_node *tree_find_by_data(Tree_header *header, Tree_data *needle,
 	} else {
 #ifdef DEBUG
 	  /* keep our subscribed viewers up to date */
-	  extra_warn("Found node in tree_find_by_data() at %p after %d hops\n",
+	  libcontainer_warn("Found node in tree_find_by_data() at %p after %d hops\n",
 				 node, hops);
 #endif
 	  return (node);
@@ -55,7 +54,7 @@ Tree_node *tree_find_by_data(Tree_header *header, Tree_data *needle,
 
   /* no node was found */
 #ifdef DEBUG
-  extra_warn("No matching node found using tree_find_by_data()\n");
+  libcontainer_warn("No matching node found using tree_find_by_data()\n");
 #endif
 
   return (TREE_NULL_NODE);
