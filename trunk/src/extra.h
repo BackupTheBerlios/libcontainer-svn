@@ -3,6 +3,6 @@
 
 #define WARN_ARGS __FILE__, __LINE__
 
-void extra_warn(char *fmt, ...);
+void libcontainer_warn(const char *file, int line, char *fmt, ...);
 
 #endif

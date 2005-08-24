@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include <libcontainer.h>
+#include "extra.h"
 
 #ifdef HAVE_CONFIG_H
   #include "config.h"
@@ -100,7 +101,7 @@ List_header *list_init(void) {
   
   if (!(header = (List_header *)malloc(sizeof(List_header)))) {
 #ifdef DEBUG
-	libcontainer_warn("Memory allocation failure in list_init()");
+	libcontainer_warn(WARN_ARGS, "Memory allocation failure in list_init()");
 #endif
 	return ((List_header *)0);
   }
@@ -145,7 +146,8 @@ void list_destroy(List_header *header,
 	next_node = current_node->next;
 
 #ifdef DEBUG
-	libcontainer_warn("Freeing node and its data at: %p\n", current_node);
+	libcontainer_warn(WARN_ARGS, "Freeing node and its data at: %p\n",
+					  current_node);
 #endif
 
 	/* use the users free func */
@@ -196,7 +198,7 @@ static List_node *get_new_node(List_header *header, List_data *data) {
   /* allocate space for the actual node */
   if (!(node = (List_node *)malloc(sizeof(List_node)))) {
 #ifdef DEBUG
-	libcontainer_warn("Memory allocation failure in list_init()");
+	libcontainer_warn(WARN_ARGS, "Memory allocation failure in list_init()");
 #endif
 	return (LIST_NULL_NODE);
   }
@@ -206,7 +208,7 @@ static List_node *get_new_node(List_header *header, List_data *data) {
   node->next = LIST_NULL_NODE;
 
 #ifdef DEBUG
-  libcontainer_warn("New node created at %p\n", node);
+  libcontainer_warn(WARN_ARGS, "New node created at %p\n", node);
 #endif
 
   return (node);

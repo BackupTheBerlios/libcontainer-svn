@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-SOURCES = $(libcontainer_list_SOURCES) $(libcontainer_queue_SOURCES) $(libcontainer_stack_SOURCES) $(libcontainer_table_SOURCES) $(libcontainer_tree_SOURCES)
+SOURCES = libcontainer-hash.c $(libcontainer_list_SOURCES) $(libcontainer_queue_SOURCES) $(libcontainer_stack_SOURCES) $(libcontainer_tree_SOURCES)
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -40,7 +40,7 @@ build_triplet = @build@
 host_triplet = @host@
 noinst_PROGRAMS = libcontainer-list$(EXEEXT) \
 	libcontainer-stack$(EXEEXT) libcontainer-queue$(EXEEXT) \
-	libcontainer-tree$(EXEEXT) libcontainer-table$(EXEEXT)
+	libcontainer-tree$(EXEEXT) libcontainer-hash$(EXEEXT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -51,6 +51,10 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/src/config.h
 CONFIG_CLEAN_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
+libcontainer_hash_SOURCES = libcontainer-hash.c
+libcontainer_hash_OBJECTS = libcontainer-hash.$(OBJEXT)
+libcontainer_hash_LDADD = $(LDADD)
+libcontainer_hash_DEPENDENCIES = ../src/libcontainer.la
 am_libcontainer_list_OBJECTS = libcontainer-list.$(OBJEXT)
 libcontainer_list_OBJECTS = $(am_libcontainer_list_OBJECTS)
 libcontainer_list_LDADD = $(LDADD)
@@ -60,9 +64,6 @@ libcontainer_queue_LDADD = $(LDADD)
 am_libcontainer_stack_OBJECTS = libcontainer-stack.$(OBJEXT)
 libcontainer_stack_OBJECTS = $(am_libcontainer_stack_OBJECTS)
 libcontainer_stack_LDADD = $(LDADD)
-am_libcontainer_table_OBJECTS = libcontainer-table.$(OBJEXT)
-libcontainer_table_OBJECTS = $(am_libcontainer_table_OBJECTS)
-libcontainer_table_LDADD = $(LDADD)
 am_libcontainer_tree_OBJECTS = libcontainer-tree.$(OBJEXT)
 libcontainer_tree_OBJECTS = $(am_libcontainer_tree_OBJECTS)
 libcontainer_tree_LDADD = $(LDADD)
@@ -77,12 +78,12 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libcontainer_list_SOURCES) $(libcontainer_queue_SOURCES) \
-	$(libcontainer_stack_SOURCES) $(libcontainer_table_SOURCES) \
-	$(libcontainer_tree_SOURCES)
-DIST_SOURCES = $(libcontainer_list_SOURCES) \
+SOURCES = libcontainer-hash.c $(libcontainer_list_SOURCES) \
 	$(libcontainer_queue_SOURCES) $(libcontainer_stack_SOURCES) \
-	$(libcontainer_table_SOURCES) $(libcontainer_tree_SOURCES)
+	$(libcontainer_tree_SOURCES)
+DIST_SOURCES = libcontainer-hash.c $(libcontainer_list_SOURCES) \
+	$(libcontainer_queue_SOURCES) $(libcontainer_stack_SOURCES) \
+	$(libcontainer_tree_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -192,7 +193,7 @@ libcontainer_queue_SOURCES = libcontainer-queue.c
 libcontainer_queue_DEPENDENCIES = ../src/queue.c ../src/libcontainer.h
 libcontainer_tree_SOURCES = libcontainer-tree.c
 libcontainer_tree_DEPENDENCIES = ../src/bin_tree.c ../src/libcontainer.h
-libcontainer_table_SOURCES = libcontainer-table.c
+libcontainer_table_SOURCES = libcontainer-hash.c
 libcontainer_table_DEPENDENCIES = ../src/hash_table.c ../src/libcontainer.h
 all: all-am
 
@@ -234,6 +235,9 @@ clean-noinstPROGRAMS:
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
+libcontainer-hash$(EXEEXT): $(libcontainer_hash_OBJECTS) $(libcontainer_hash_DEPENDENCIES) 
+	@rm -f libcontainer-hash$(EXEEXT)
+	$(LINK) $(libcontainer_hash_LDFLAGS) $(libcontainer_hash_OBJECTS) $(libcontainer_hash_LDADD) $(LIBS)
 libcontainer-list$(EXEEXT): $(libcontainer_list_OBJECTS) $(libcontainer_list_DEPENDENCIES) 
 	@rm -f libcontainer-list$(EXEEXT)
 	$(LINK) $(libcontainer_list_LDFLAGS) $(libcontainer_list_OBJECTS) $(libcontainer_list_LDADD) $(LIBS)
@@ -243,9 +247,6 @@ libcontainer-queue$(EXEEXT): $(libcontainer_queue_OBJECTS) $(libcontainer_queue_
 libcontainer-stack$(EXEEXT): $(libcontainer_stack_OBJECTS) $(libcontainer_stack_DEPENDENCIES) 
 	@rm -f libcontainer-stack$(EXEEXT)
 	$(LINK) $(libcontainer_stack_LDFLAGS) $(libcontainer_stack_OBJECTS) $(libcontainer_stack_LDADD) $(LIBS)
-libcontainer-table$(EXEEXT): $(libcontainer_table_OBJECTS) $(libcontainer_table_DEPENDENCIES) 
-	@rm -f libcontainer-table$(EXEEXT)
-	$(LINK) $(libcontainer_table_LDFLAGS) $(libcontainer_table_OBJECTS) $(libcontainer_table_LDADD) $(LIBS)
 libcontainer-tree$(EXEEXT): $(libcontainer_tree_OBJECTS) $(libcontainer_tree_DEPENDENCIES) 
 	@rm -f libcontainer-tree$(EXEEXT)
 	$(LINK) $(libcontainer_tree_LDFLAGS) $(libcontainer_tree_OBJECTS) $(libcontainer_tree_LDADD) $(LIBS)
@@ -256,10 +257,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcontainer-hash.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcontainer-list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcontainer-queue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcontainer-stack.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcontainer-table.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcontainer-tree.Po@am__quote@
 
 .c.o:

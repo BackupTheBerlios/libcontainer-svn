@@ -1,5 +1,5 @@
 noinst_PROGRAMS = libcontainer-list libcontainer-stack \
-			   libcontainer-queue libcontainer-tree libcontainer-table
+			   libcontainer-queue libcontainer-tree libcontainer-hash
 LDADD = ../src/libcontainer.la
 
 libcontainer_list_SOURCES = libcontainer-list.c
@@ -14,5 +14,5 @@ libcontainer_queue_DEPENDENCIES = ../src/queue.c ../src/libcontainer.h
 libcontainer_tree_SOURCES = libcontainer-tree.c
 libcontainer_tree_DEPENDENCIES = ../src/bin_tree.c ../src/libcontainer.h
 
-libcontainer_table_SOURCES = libcontainer-table.c
+libcontainer_table_SOURCES = libcontainer-hash.c
 libcontainer_table_DEPENDENCIES = ../src/hash_table.c ../src/libcontainer.h

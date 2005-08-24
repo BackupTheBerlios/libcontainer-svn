@@ -4,11 +4,11 @@
 
 #define ERR_LOCATION stderr
 
-void libcontainer_warn(char *fmt, ...) {
+void libcontainer_warn(const char *file, int line, char *fmt, ...) {
   va_list args;
 
   /* initial tagging */
-  fprintf(ERR_LOCATION, "libcontainer: ");
+  fprintf(ERR_LOCATION, "libcontainer %s [ %d ]: ", file, line);
 
   /* now the rest of the user data */
   va_start(args, fmt);

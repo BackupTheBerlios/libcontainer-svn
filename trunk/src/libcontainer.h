@@ -1,10 +1,6 @@
 #ifndef __LIB_CONTAINER_837284789237489723894798237
 #define __LIB_CONTAINER_837284789237489723894798237
 
-/* general */
-
-void libcontainer_warn(char *fmt, ...);
-
 /* tree */
 
 #define TREE_NULL_NODE ((Tree_node *)0)
@@ -140,15 +136,31 @@ void stack_destroy(Stack_header *header, List_data_free_func free_func);
 
 /* hash table */
 
+#define HASH_NULL_NODE ((Hashtable_node *)0)
+
+#define HASH_GET_COUNT(header) header->list_header->count
+
+typedef void Hashtable_data;
+
+typedef unsigned long (* Hashing_function)(const unsigned char *);
+
+typedef struct __HASHTABLE_HEADER {
+  Tree_header *tree_header;
+  Hashing_function hash_function;
+} Hashtable_header;
+
 typedef struct __HASHTABLE_NODE {
-  List_node *node;
-  unsigned long key;
+  unsigned long hash;
+  Hashtable_data *data;
 } Hashtable_node;
 
-#define Hashtable_header List_header;
-
 /* some hash functions to choose from */
-unsigned long hash_djb2(const unsigned char *str);
-unsigned long hash_sdbm(const unsigned char *str);
+unsigned long hash_medium(const unsigned char *str);
+unsigned long hash_strong(const unsigned char *str);
+
+Hashtable_header *hashtable_init(Hashing_function hash_function);
+Hashtable_node *hashtable_insert_node(Hashtable_header *header,
+									  const unsigned char *hash,
+									  Hashtable_data *data);
 
 #endif
